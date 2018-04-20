@@ -8,7 +8,7 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorboardX as tb
-
+from visdom import Visdom
 from model.config import cfg
 import roi_data_layer.roidb as rdl_roidb
 from roi_data_layer.layer import RoIDataLayer
@@ -26,7 +26,41 @@ import os
 import sys
 import glob
 import time
+viz = Visdom()
 
+rpn_cls_lot = viz.line(  
+                X=torch.zeros((1,)),  
+                Y=torch.zeros((1,)),  
+                opts=dict(  
+                        xlabel='epoch',  
+                          ylabel='RPN Cls Loss',  
+                        title='RPN Cls Loss',  
+                        legend=['epoch_loss']))
+rpn_box_lot = viz.line(  
+                X=torch.zeros((1,)),  
+                Y=torch.zeros((1,)),  
+                opts=dict(  
+                        xlabel='epoch',  
+                          ylabel='RPN Box Loss',  
+                        title='RPN Box Loss',  
+                        legend=['epoch_loss']))
+rcnn_cls_lot = viz.line(  
+                X=torch.zeros((1,)),  
+                Y=torch.zeros((1,)),  
+                opts=dict(  
+                        xlabel='epoch',  
+                          ylabel='RCNN Cls Loss',  
+                        title='RCNN Cls Loss',  
+                        legend=['epoch_loss']))
+
+rcnn_box_lot = viz.line(  
+                X=torch.zeros((1,)),  
+                Y=torch.zeros((1,)),  
+                opts=dict(  
+                        xlabel='epoch',  
+                          ylabel='RCNN Box Loss',  
+                        title='RCNN Box Loss',  
+                        legend=['epoch_loss']))
 
 def scale_lr(optimizer, scale):
   """Scale the learning rate of the optimizer"""
@@ -96,12 +130,12 @@ class SolverWrapper(object):
     # tried my best to find the random states so that it can be recovered exactly
     # However the Tensorflow state is currently not available
     with open(nfile, 'rb') as fid:
-      st0 = pickle.load(fid)
-      cur = pickle.load(fid)
-      perm = pickle.load(fid)
-      cur_val = pickle.load(fid)
-      perm_val = pickle.load(fid)
-      last_snapshot_iter = pickle.load(fid)
+      st0 = pickle.load(fid, encoding='latin1')
+      cur = pickle.load(fid, encoding='latin1')
+      perm = pickle.load(fid, encoding='latin1')
+      cur_val = pickle.load(fid, encoding='latin1')
+      perm_val = pickle.load(fid, encoding='latin1')
+      last_snapshot_iter = pickle.load(fid, encoding='latin1')
 
       np.random.set_state(st0)
       self.data_layer._cur = cur
