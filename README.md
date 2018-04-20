@@ -1,3 +1,9 @@
+To run the code, type in:
+./experiments/scripts/train_faster_rcnn.sh 0 pascal_voc res101
+
+Note: Need the data folder for imagenet_weights, VOCdevkit2007, and coco API
+
+====================================================================================================
 # Important notice:
 If you used the master branch before Sep. 26 2017 and its corresponding pretrained model, **PLEASE PAY ATTENTION**:
 The old master branch in now under old_master, you can still run the code and download the pretrained model, but the pretrained model for that old master is not compatible to the current master!
